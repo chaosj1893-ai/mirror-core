@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "mirror-core"
+version = "0.1.0"
+description = "A growable, explainable personal digital persona system"
+authors = ["JC"]
+readme = "README.md"
+packages = [{include = "mirror_core", from = "src"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+anthropic = "^0.52.0"
+chromadb = "^0.6.0"
+click = "^8.1.0"
+pyyaml = "^6.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.0"
+pytest-asyncio = "^0.24.0"
+
+[tool.poetry.scripts]
+mirror = "mirror_core.cli:main"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

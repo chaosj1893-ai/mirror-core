@@ -1,0 +1,12 @@
+# .gitignore
+__pycache__/
+*.pyc
+.venv/
+dist/
+*.egg-info/
+data/soul/
+data/faculty/
+data/body/
+data/timeline/
+data/feedback/
+.env
