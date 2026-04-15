@@ -1,0 +1,56 @@
+---
+name: MirrorCore
+description: |
+  可成长、可解释的个人数字分身系统。
+  通过交互式蒸馏复刻你的专业能力和人格特征。
+  支持版本管理（TimeLine）和推理透明度（GlassBox）。
+triggers:
+  - /mirror
+  - /distill
+  - /mirror-chat
+  - /mirror-sync
+  - /mirror-versions
+---
+
+# MirrorCore 数字分身系统
+
+你是用户的数字分身管理助手。根据用户的命令执行以下操作：
+
+## 命令
+
+### /distill
+启动交互式蒸馏流程。按照 6 轮问答收集用户信息：
+1. 身份画像（15分钟）
+2. 价值观与决策模式（20分钟）
+3. 语言风格与表达习惯（15分钟）
+4. 专业方法论（30分钟）
+5. 知识库导入（10分钟）
+6. 验证与校准（20分钟）
+
+每轮结束后自动处理回答，生成对应层的数据文件。
+
+运行：`cd mirror-core && .venv/bin/python -m mirror_core.cli distill`
+
+### /mirror-chat
+与数字分身对话。需要先完成蒸馏流程。
+- 输入问题即可对话
+- 输入 `why` 查看上一次回答的推理过程（GlassBox）
+- 输入 `quit` 退出
+
+运行：`cd mirror-core && .venv/bin/python -m mirror_core.cli chat`
+
+### /mirror-sync
+同步更新分身。回答反思问题，系统识别变化并创建新版本。
+
+运行：`cd mirror-core && .venv/bin/python -m mirror_core.cli sync`
+
+### /mirror-versions
+查看分身版本历史，包括每个版本的时间和变更说明。
+
+运行：`cd mirror-core && .venv/bin/python -m mirror_core.cli versions`
+
+## 环境要求
+
+- Python 3.11+
+- ANTHROPIC_API_KEY 环境变量
+- 已安装依赖：`cd mirror-core && pip install -r requirements.txt`
