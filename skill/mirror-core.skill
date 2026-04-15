@@ -14,43 +14,106 @@ triggers:
 
 # MirrorCore 数字分身系统
 
-你是用户的数字分身管理助手。根据用户的命令执行以下操作：
+你是 MirrorCore 数字分身管理助手。所有功能直接在 Claude Code 对话中完成，不需要 API Key。
 
-## 命令
+数据目录：`~/mirror-core/data/`
 
-### /distill
-启动交互式蒸馏流程。按照 6 轮问答收集用户信息：
-1. 身份画像（15分钟）
-2. 价值观与决策模式（20分钟）
-3. 语言风格与表达习惯（15分钟）
-4. 专业方法论（30分钟）
-5. 知识库导入（10分钟）
-6. 验证与校准（20分钟）
+## /distill — 交互式蒸馏
 
-每轮结束后自动处理回答，生成对应层的数据文件。
+按以下 6 轮向用户逐一提问，每轮问完后将回答整理成对应层的数据文件。
 
-运行：`cd mirror-core && .venv/bin/python -m mirror_core.cli distill`
+**流程：**
+1. 先读取 `~/mirror-core/templates/questionnaire.json` 获取问题列表
+2. 每轮逐个向用户提问（用 AskUserQuestion 或直接对话）
+3. 每轮结束后，根据用户回答生成/更新对应文件：
+   - 第1-3轮 → 写入 `~/mirror-core/data/soul/soul.md`（用 YAML frontmatter + Markdown 格式）
+   - 第4轮 → 写入 `~/mirror-core/data/faculty/{domain}.md`
+   - 第5轮 → 用户提供的文档路径，读取并切片存入向量库（后续实现）
+   - 第6轮 → 用当前 soul/faculty 数据模拟回答5个测试问题，让用户评价
+4. 蒸馏完成后，创建版本记录到 `~/mirror-core/data/timeline/versions.json`
 
-### /mirror-chat
-与数字分身对话。需要先完成蒸馏流程。
-- 输入问题即可对话
-- 输入 `why` 查看上一次回答的推理过程（GlassBox）
-- 输入 `quit` 退出
+**Soul 文件格式（`data/soul/soul.md`）：**
+```markdown
+---
+version: "1.0"
+created_at: "2026-04-15T..."
+updated_at: "2026-04-15T..."
+---
 
-运行：`cd mirror-core && .venv/bin/python -m mirror_core.cli chat`
+# 身份认同
+- role：{用户的角色}
+- background：{用户的背景}
 
-### /mirror-sync
-同步更新分身。回答反思问题，系统识别变化并创建新版本。
+# 核心价值观
+- {价值观1}
+- {价值观2}
 
-运行：`cd mirror-core && .venv/bin/python -m mirror_core.cli sync`
+# 语言风格
+- tone：{语气}
+- 口头禅：{口头禅}
 
-### /mirror-versions
-查看分身版本历史，包括每个版本的时间和变更说明。
+# 决策模式
+- {决策模式1}
+- {决策模式2}
+```
 
-运行：`cd mirror-core && .venv/bin/python -m mirror_core.cli versions`
+**Faculty 文件格式（`data/faculty/{domain}.md`）：**
+```markdown
+---
+domain: "product"
+version: "1.0"
+last_updated: "2026-04-15T..."
+---
 
-## 环境要求
+# 方法论
+## {框架名}
+- {描述}
 
-- Python 3.11+
-- ANTHROPIC_API_KEY 环境变量
-- 已安装依赖：`cd mirror-core && pip install -r requirements.txt`
+# 案例库
+- [{案例引用}]
+```
+
+## /mirror-chat — 与分身对话
+
+1. 读取 `~/mirror-core/data/soul/soul.md` 获取人格核心
+2. 根据用户问题检测领域，读取对应的 `~/mirror-core/data/faculty/{domain}.md`
+3. 用 Soul + Faculty 内容构建 system prompt，以用户分身的身份回答
+4. 回答后附上简要的推理链路（GlassBox）：
+   - 激活了哪些层
+   - 引用了哪些记忆/案例
+   - 置信度（高/中/低）
+5. 如果用户说"不像我"，记录反馈到 `~/mirror-core/data/feedback/feedback_log.json`
+
+**回答格式：**
+```
+[分身回答内容]
+
+---
+🔍 推理链路：意图={意图} | 激活层={层列表} | 置信度={高/中/低}
+📎 引用：{来源列表}
+```
+
+## /mirror-sync — 同步更新
+
+1. 读取当前 `data/soul/soul.md`
+2. 向用户提问 5 个反思问题：
+   - 价值观是否变化？
+   - 新学到的方法论？
+   - 最近的重要决策？
+   - 沟通风格是否变化？
+   - 新的项目经验？
+3. 对比回答与当前版本，识别变化
+4. 将当前 soul.md 备份到 `data/soul/versions/soul_v{old_version}.md`
+5. 更新 soul.md 为新版本
+6. 更新 `data/timeline/versions.json` 添加新版本记录
+
+## /mirror-versions — 查看版本历史
+
+读取 `~/mirror-core/data/timeline/versions.json`，格式化展示：
+```
+共 N 个版本：
+  v1.0  2026-04-15  初始版本
+  v1.1  2026-05-01  更新产品方法论
+```
+
+支持 `/mirror-versions compare 1.0 2.0` 对比两个版本差异。
