@@ -26,6 +26,7 @@ class SoulManager:
         values: list[str],
         language_style: dict[str, str],
         decision_patterns: list[str],
+        personality_tags: dict[str, str] | None = None,
     ) -> None:
         """Save soul data and create a version snapshot."""
         now = datetime.now().isoformat()
@@ -37,6 +38,7 @@ class SoulManager:
             values=values,
             language_style=language_style,
             decision_patterns=decision_patterns,
+            personality_tags=personality_tags or {},
         )
         self.soul_path.parent.mkdir(parents=True, exist_ok=True)
         self.soul_path.write_text(content, encoding="utf-8")
@@ -77,6 +79,7 @@ class SoulManager:
         values: list[str],
         language_style: dict[str, str],
         decision_patterns: list[str],
+        personality_tags: dict[str, str] | None = None,
     ) -> str:
         frontmatter = yaml.dump(
             {
@@ -94,6 +97,12 @@ class SoulManager:
         for k, v in identity.items():
             lines.append(f"- {k}：{v}")
         lines.append("")
+
+        if personality_tags:
+            lines.append("# 人格标签")
+            for k, v in personality_tags.items():
+                lines.append(f"- {k}：{v}")
+            lines.append("")
 
         lines.append("# 核心价值观")
         for v in values:
@@ -123,6 +132,7 @@ class SoulManager:
         values = []
         language_style = {}
         decision_patterns = []
+        personality_tags = {}
 
         current_section = None
         for line in body.strip().split("\n"):
@@ -134,6 +144,9 @@ class SoulManager:
                 if current_section == "身份认同" and "：" in item:
                     k, v = item.split("：", 1)
                     identity[k] = v
+                elif current_section == "人格标签" and "：" in item:
+                    k, v = item.split("：", 1)
+                    personality_tags[k] = v
                 elif current_section == "核心价值观":
                     values.append(item)
                 elif current_section == "语言风格" and "：" in item:
@@ -161,4 +174,5 @@ class SoulManager:
             values=values,
             language_style=language_style,
             decision_patterns=decision_patterns,
+            personality_tags=personality_tags,
         )

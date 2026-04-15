@@ -16,6 +16,18 @@ class SoulData:
     values: list[str]
     language_style: dict[str, str]
     decision_patterns: list[str]
+    personality_tags: dict[str, str] = field(default_factory=dict)
+
+
+@dataclass
+class DebateResult:
+    """Result of a multi-persona debate."""
+
+    topic: str
+    rounds: list[dict]
+    consensus: list[str]
+    disagreements: list[str]
+    summary: str
 
 
 @dataclass

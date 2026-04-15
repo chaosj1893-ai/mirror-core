@@ -85,3 +85,37 @@ def test_get_raw_content(tmp_data_dir):
 def test_load_nonexistent_returns_none(tmp_data_dir):
     mgr = SoulManager(data_dir=tmp_data_dir)
     assert mgr.load() is None
+
+
+def test_save_and_load_personality_tags(tmp_data_dir):
+    mgr = SoulManager(data_dir=tmp_data_dir)
+    mgr.save(
+        version="1.0",
+        identity={"role": "PM"},
+        values=["快速迭代"],
+        language_style={"tone": "简洁"},
+        decision_patterns=["MVP"],
+        personality_tags={"MBTI": "INTJ", "星座": "天蝎座", "核心特质": "理性、结果导向"},
+    )
+
+    soul = mgr.load()
+    assert soul.personality_tags["MBTI"] == "INTJ"
+    assert soul.personality_tags["星座"] == "天蝎座"
+
+    raw = mgr.get_raw_content()
+    assert "# 人格标签" in raw
+    assert "INTJ" in raw
+
+
+def test_backward_compat_no_personality_tags(tmp_data_dir):
+    mgr = SoulManager(data_dir=tmp_data_dir)
+    mgr.save(
+        version="1.0",
+        identity={"role": "PM"},
+        values=["快速迭代"],
+        language_style={"tone": "简洁"},
+        decision_patterns=["MVP"],
+    )
+
+    soul = mgr.load()
+    assert soul.personality_tags == {}
