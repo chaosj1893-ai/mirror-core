@@ -19,7 +19,7 @@ def test_get_round_questions(tmp_data_dir):
 
     round_1 = engine.get_round(1)
     assert round_1["name"] == "身份画像"
-    assert len(round_1["questions"]) == 5
+    assert len(round_1["questions"]) == 8
 
 
 def test_get_round_invalid(tmp_data_dir):
