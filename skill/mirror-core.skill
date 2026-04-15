@@ -1,15 +1,6 @@
 ---
-name: MirrorCore
-description: |
-  可成长、可解释的个人数字分身系统。
-  通过交互式蒸馏复刻你的专业能力和人格特征。
-  支持版本管理（TimeLine）和推理透明度（GlassBox）。
-triggers:
-  - /mirror
-  - /distill
-  - /mirror-chat
-  - /mirror-sync
-  - /mirror-versions
+name: mirror-core
+description: "可成长、可解释的个人数字分身系统。输入 /mirror-core 启动蒸馏、对话、同步、导出、审视或辩论。支持 distill（蒸馏）、chat（对话）、sync（同步）、versions（版本）、export（导出分享）、review（作品审视）、debate（多分身辩论）七个子命令。"
 ---
 
 # MirrorCore 数字分身系统
@@ -117,3 +108,48 @@ last_updated: "2026-04-15T..."
 ```
 
 支持 `/mirror-versions compare 1.0 2.0` 对比两个版本差异。
+
+## /mirror-core export — 导出分身
+
+将分身数据导出为独立目录（可推送到 GitHub 分享给别人）。
+
+**流程：**
+1. 读取用户参数：`--name`（分身名称）、`--include-knowledge`（是否含知识库）
+2. 将 `data/soul/` + `data/faculty/` + `data/timeline/` 复制到 `~/{name}-persona/`
+3. 基于 Soul 数据自动生成 `README.md`（包含人格标签、擅长领域、使用方式）
+4. 生成 `INSTALL.md`
+5. 初始化 Git 仓库并提交
+6. 提示用户运行 `gh repo create` 推送到 GitHub
+
+**默认不导出：** Body 层（可能含私密知识）和 feedback 日志。加 `--include-knowledge` 可包含知识库。
+
+运行：`cd mirror-core && .venv/bin/python -m mirror_core.cli export --name jc`
+
+## /mirror-core review — 作品审视
+
+用分身的视角审视文档，指出逻辑漏洞和改进点。
+
+**流程：**
+1. 读取目标文件内容
+2. 加载 Soul + 所有 Faculty 数据
+3. 构建 Prompt：用分身的标准审视文档，从逻辑自洽、遗漏考虑、改进建议三个角度反馈
+4. 用分身的说话风格输出审视结果
+
+在 Claude Code 中使用时，直接读取文件并用当前 Claude 会话作为 LLM，无需 API Key。
+
+## /mirror-core debate — 多分身辩论
+
+让两个分身就某个话题辩论，输出分歧点和共识。
+
+**流程：**
+1. 加载两份分身的 Soul + Faculty 数据
+2. 交替生成观点（默认 3 轮，共 6 次发言）
+3. 总结分歧点和共识
+
+**参数：**
+- `persona1_dir`：第一个分身的数据目录
+- `persona2_dir`：第二个分身的数据目录
+- `topic`：辩论话题
+- `--rounds`：辩论轮数（默认 3）
+
+在 Claude Code 中使用时，读取两份分身数据，用 Claude 交替扮演两个角色进行辩论。
