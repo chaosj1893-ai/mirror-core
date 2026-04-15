@@ -1,0 +1,71 @@
+{
+  "rounds": [
+    {
+      "id": 1,
+      "name": "身份画像",
+      "duration_minutes": 15,
+      "questions": [
+        {"id": "1.1", "text": "你目前的职业角色是什么？做了多久？", "target": "soul.identity"},
+        {"id": "1.2", "text": "你的专业背景是什么？是否有转行经历？", "target": "soul.identity"},
+        {"id": "1.3", "text": "你目前的工作状态是什么？（在职/创业/自由职业）", "target": "soul.identity"},
+        {"id": "1.4", "text": "你最擅长的3个技能是什么？", "target": "soul.identity"},
+        {"id": "1.5", "text": "你的短期（1年内）和中期（3年内）职业目标是什么？", "target": "soul.identity"}
+      ]
+    },
+    {
+      "id": 2,
+      "name": "价值观与决策模式",
+      "duration_minutes": 20,
+      "questions": [
+        {"id": "2.1", "text": "团队提出3个需求：A. 老板要的大功能（2个月）B. 用户呼声最高的小优化（1周）C. 技术债务修复。你会优先做哪个？为什么？", "target": "soul.decision_patterns"},
+        {"id": "2.2", "text": "数据显示功能A留存更好，但你直觉认为功能B更有长期价值。你怎么决策？", "target": "soul.decision_patterns"},
+        {"id": "2.3", "text": "你工作中最不能接受的事情是什么？（底线）", "target": "soul.values"},
+        {"id": "2.4", "text": "如果只能保留一个工作原则，你会保留哪个？", "target": "soul.values"},
+        {"id": "2.5", "text": "描述一个你做过的最艰难的决策，以及你是怎么做出选择的。", "target": "soul.decision_patterns"}
+      ]
+    },
+    {
+      "id": 3,
+      "name": "语言风格与表达习惯",
+      "duration_minutes": 15,
+      "questions": [
+        {"id": "3.1", "text": "你在工作沟通中最常用的3个口头禅或习惯用语是什么？", "target": "soul.language_style"},
+        {"id": "3.2", "text": "你偏好哪种表达方式？A. 数据和图表说话 B. 讲故事和案例 C. 逻辑推理和框架", "target": "soul.language_style"},
+        {"id": "3.3", "text": "你写文档/消息时的风格是怎样的？（长篇详细 vs 简洁直接 vs 条理列表）", "target": "soul.language_style"},
+        {"id": "3.4", "text": "给你看三段不同风格的文字，哪段最像你？\n\nA: \"其实核心问题就一个：用户到底要什么。别整那些虚的，先跑数据看看。\"\n\nB: \"我觉得我们可以从用户旅程的角度来系统性地分析这个问题，首先梳理关键触点...\"\n\nC: \"上次我们做那个项目的时候也遇到过类似的情况，当时我们是这么解决的...\"", "target": "soul.language_style"}
+      ]
+    },
+    {
+      "id": 4,
+      "name": "专业方法论",
+      "duration_minutes": 30,
+      "questions": [
+        {"id": "4.1", "text": "你做需求分析时通常用什么框架或流程？", "target": "faculty"},
+        {"id": "4.2", "text": "你怎么评估一个功能的优先级？有没有固定的方法？", "target": "faculty"},
+        {"id": "4.3", "text": "描述你最成功的一个项目：背景是什么？你做了什么关键决策？结果如何？", "target": "faculty"},
+        {"id": "4.4", "text": "描述一个失败或不理想的项目：哪里出了问题？你学到了什么？", "target": "faculty"},
+        {"id": "4.5", "text": "在你的专业领域，你最常用的3个工具/方法/框架是什么？", "target": "faculty"},
+        {"id": "4.6", "text": "如果要教一个新人你的工作，你会强调哪3个最重要的原则？", "target": "faculty"}
+      ]
+    },
+    {
+      "id": 5,
+      "name": "知识库导入",
+      "duration_minutes": 10,
+      "questions": [
+        {"id": "5.1", "text": "你有哪些个人笔记或文档可以导入？（Obsidian/Notion路径）", "target": "body"},
+        {"id": "5.2", "text": "这些内容中，哪些是可以公开引用的？哪些是私密的？", "target": "body"},
+        {"id": "5.3", "text": "有没有特别重要的文档需要优先导入？", "target": "body"}
+      ]
+    },
+    {
+      "id": 6,
+      "name": "验证与校准",
+      "duration_minutes": 20,
+      "questions": [
+        {"id": "6.1", "text": "[验证] 分身会回答5个测试问题，请评价每个回答是否像你。", "target": "calibration"},
+        {"id": "6.2", "text": "如果有不像你的地方，具体是哪里不对？应该怎么改？", "target": "calibration"}
+      ]
+    }
+  ]
+}
